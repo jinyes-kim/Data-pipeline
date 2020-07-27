@@ -5,5 +5,5 @@ def decoding(bytes_data):
 def msg_decode(msg):
     data = msg.value
     data = data.split()
-    res = list(map(decoding), data)
+    res = list(map(decoding, data))
     return res
