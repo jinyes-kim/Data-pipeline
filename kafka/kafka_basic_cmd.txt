@@ -1,0 +1,29 @@
+kafka basic cmd
+
+# create topic
+./kafka-topics.sh --create --bootstrap-server {aws ec2 public ip}:9092 --replication-factor 1 --partitions 3 --topic test
+
+
+# write topic on producer env
+./kafka-console-producer.sh --bootstrap-server {aws ec2 public ip}:9092 --topic test
+
+
+# read topic on consumer env
+./kafka-console-consumer.sh --bootstrap-server {aws ec2 public ip}:9092 --topic test --from-beginning
+
+
+#  " - goruping
+./kafka-console-consumer.sh --bootstrap-server {aws ec2 public ip}:9092 --topic test -group testgroup --from-beginning
+
+
+# topic list
+./kafka-consumer-groups.sh --bootstrap-server {aws ec2 public ip}:9092 --list
+
+
+# topic describe 
+./kafka-consumer-groups.sh --bootstrap-server {aws ec2 public ip}:9092 --group testgroup --describe
+
+
+# reset offset
+./kafka-consumer-groups.sh --bootstrap-server {aws ec2 public ip}:9092 --group testgroup --topic test --reset-offsets --to-earliest --execute
+./kafka-consumer-groups.sh --bootstrap-server {aws ec2 public ip}:9092 --group testgroup --topic test:1 --reset-offsets --to-offset 10 --execute
