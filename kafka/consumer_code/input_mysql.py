@@ -8,7 +8,7 @@ def connect_mysql(host_ip, port_num, user_id, pw, db):
                                       user=user_id, password=pw,
                                       database=db)
     except Exception as error:
-        print("DB connect fail ->", error)
+        print("MySQL connect fail -> ", error)
 
     return tmp.cursor()
 
@@ -32,7 +32,6 @@ def insert_mysql(cur, log_list):  # list type
 
 
 # create table
-
 """
 cursor.execute(
     "CREATE TABLE "
