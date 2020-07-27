@@ -12,7 +12,7 @@ consumer = KafkaConsumer(topicName,
                          auto_offset_reset='earliest')
 
 influx_client = influx.connect_influxdb('influx_server_ip')
-mysql_client = mysql.connect_mysql('mysql_server_ip', 3306, 'user_id', 'password', 'db_name')
+mysql_client = mysql.connect_mysql('mysql_server_ip', 43306, 'user_id', 'password', 'db_name')
 
 
 try:
@@ -24,8 +24,15 @@ try:
         topic, new_log = dc.msg_decode(msg.topic), dc.msg_decode(msg.value)
 
         # insert data into influx db & mysql
-        influx.insert_influxdb(influx_client, influx.to_json(topic, new_log))
-        mysql.insert_mysql(mysql_client, new_log)
+        try:
+            influx.insert_influxdb(influx_client, influx.to_json(topic, new_log))
+        except Exception as error:
+            print("influx db insert error -> ", error)
+            
+        try:
+            mysql.insert_mysql(mysql_client, new_log)
+        except Exception as error:
+            print("MySQL insert error -> ", error)
 
 except KeyboardInterrupt:
     sys.exit()
