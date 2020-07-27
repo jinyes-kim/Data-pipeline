@@ -2,7 +2,10 @@ from influxdb import InfluxDBClient
 
 
 def connect_influxdb(server_ip):
-    client = InfluxDBClient(host=server_ip, port=8886)
+    try:
+        client = InfluxDBClient(host=server_ip, port=8886)
+    except Exception as error:
+        print("influx db connect fail -> ", error)
     return client
 
 
