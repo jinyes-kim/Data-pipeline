@@ -12,7 +12,7 @@ consumer = KafkaConsumer(topicName,
                          auto_offset_reset='earliest')
 
 influx_client = influx.connect_influxdb('influx_server_ip')
-mysql_client = mysql.connect_mysql('mysql_server_ip', 43306, 'user_id', 'password', 'db_name')
+mysql_client = mysql.connect_mysql('mysql_server_ip', 3306, 'user_id', 'password', 'db_name')
 
 
 try:
