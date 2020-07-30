@@ -13,6 +13,20 @@ def connect_mysql(host_ip, port_num, user_id, pw, db):
     return tmp.cursor()
 
 
+def create_table(cursor, table_name):
+    sql = "CREATE TABLE " + str(table_name) + \
+          "(date DATE, " \
+          "platform VARCHAR(10), " \
+          "user_ID VARCHAR(30), " \
+          "item VARCHAR(30), " \
+          "num INTEGER, " \
+          "price INTEGER, " \
+          "link VARCHAR(10))"
+
+    cursor.execute(sql)
+    cursor.commit()
+
+
 def insert_mysql(cur, log_list):  # list type
     data = log_list.split()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -30,19 +44,6 @@ def insert_mysql(cur, log_list):  # list type
     cur.execute(sql, val)
 
 
-
-# create table
-"""
-cursor.execute(
-    "CREATE TABLE "
-    "test(date DATE, "
-    "platform VARCHAR(10), "
-    "user_ID VARCHAR(30), "
-    "item VARCHAR(30), "
-    "num INTEGER, "
-    "price INTEGER, "
-    "link VARCHAR(10))")
-"""
 
 
 """
