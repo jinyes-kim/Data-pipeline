@@ -14,7 +14,7 @@ def create_table(client, table_name):
 
 
 def switch_table(client, table_name):
-    client.switch_database('to_sue_db_name')
+    client.switch_database(table_name)
 
 
 def to_json(topic, data):
