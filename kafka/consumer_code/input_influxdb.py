@@ -1,9 +1,9 @@
 from influxdb import InfluxDBClient
-
+import datetime
 
 def connect_influxdb(server_ip):
     try:
-        client = InfluxDBClient(host=server_ip, port=8886)
+        client = InfluxDBClient(host=server_ip, port=8086)
     except Exception as error:
         print("influx db connect fail -> ", error)
     return client
@@ -25,24 +25,15 @@ def to_json(topic, data):
                 "platform": platform,
                 "user_id": user_id
             },
+            "time":  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fields": {
                 "item": item,
                 "quantity": num,
                 "price": price,
                 "link": link
             }
+
         }
     ]
     return json_body
 
-
-def insert_influxdb(client_var, json_data):
-    client_var.write_points(json_data)
-
-
-def create_table(client, table_name):
-    client.create_database(table_name)
-
-
-def switch_table(client, table_name):
-    client.switch_database(table_name)
