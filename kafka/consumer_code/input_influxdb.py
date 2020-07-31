@@ -23,14 +23,14 @@ def to_json(topic, data):
             "measurement": topic,
             "tags": {
                 "platform": platform,
-                "user_id": user_id
+                "link": link
             },
             "time":  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fields": {
+                "user_id": user_id,
                 "item": item,
                 "quantity": num,
                 "price": price,
-                "link": link
             }
 
         }
