@@ -13,9 +13,23 @@ consumer = KafkaConsumer(topicName,
                          auto_offset_reset='earliest')
 
 influx_client = influx.connect_influxdb('influx_server_ip')
-mysql_client = mysql.connect_mysql('mysql_server_ip', 43306, 'user_id', 'password', 'db_name')
+influx_client.switch_database("test_market")
+
+mysql_db = mysql.connect_mysql('mysql_server_ip', 43306, 'user_id', 'password', 'db_name')
+mysql_cursor = mysql_db.cursor()
 
 
+# MySQL table check
+mysql_table_list = []
+mysql_cursor.execute("SHOW TABLES")
+tables = mysql_cursor.fetchall()
+
+for a in tables:
+    word = str(a)
+    if word not in mysql_table_list:
+        mysql_table_list.append(word[2:-3])
+
+# consume
 try:
     for msg in consumer:
         print("%s:%d:%d: key=%s value=%s"
@@ -25,22 +39,22 @@ try:
         topic, new_log = dc.msg_decode(msg.topic), dc.msg_decode(msg.value)
 
         # choose table
-        new_table_name = datetime.datetime.now().strftime("%Y%m%d")  # table_name
-        tables = mysql_client.execute("SHOW TABLES;")
-        if new_table_name in tables:
-            pass
-        else:
-            sql = mysql.create_table(mysql_client, new_table_name)
-            mysql_client.commit()
+        table_name = datetime.datetime.now().strftime("%Y%m%d")  # table_name
+        table_name = 'USER_' + table_name + "_TB"
+
+        if table_name not in mysql_table_list:
+            mysql.create_table(mysql_cursor, table_name)
+            mysql_table_list.append(table_name)
 
         # insert data into influx db & mysql
         try:
-            influx.insert_influxdb(influx_client, influx.to_json(topic, new_log))
+            influx_client.write_points(influx.to_json(topic, new_log))
         except Exception as error:
             print("influx db insert error -> ", error)
 
         try:
-            mysql.insert_mysql(mysql_client, new_table_name, new_log)
+            mysql.insert_mysql(mysql_cursor, table_name, new_log)
+            mysql_db.commit()
         except Exception as error:
             print("MySQL insert error -> ", error)
 
