@@ -3,6 +3,7 @@ import input_influxdb as influx
 import input_mysql as mysql
 import decode_function as dc
 import sys
+import datetime
 
 bootstrap_servers = ['localhost:9092']
 topicName = 'test'
@@ -23,14 +24,23 @@ try:
         # decode topic & log data
         topic, new_log = dc.msg_decode(msg.topic), dc.msg_decode(msg.value)
 
+        # choose table
+        new_table_name = datetime.datetime.now().strftime("%Y%m%d")  # table_name
+        tables = mysql_client.execute("SHOW TABLES")
+        if new_table_name in tables:
+            pass
+        else:
+            sql = mysql.create_table(mysql_client, new_table_name)
+            mysql_client.commit()
+
         # insert data into influx db & mysql
         try:
             influx.insert_influxdb(influx_client, influx.to_json(topic, new_log))
         except Exception as error:
             print("influx db insert error -> ", error)
-            
+
         try:
-            mysql.insert_mysql(mysql_client, new_log)
+            mysql.insert_mysql(mysql_client, new_table_name, new_log)
         except Exception as error:
             print("MySQL insert error -> ", error)
 
