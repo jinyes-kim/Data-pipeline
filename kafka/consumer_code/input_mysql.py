@@ -10,24 +10,22 @@ def connect_mysql(host_ip, port_num, user_id, pw, db):
     except Exception as error:
         print("MySQL connect fail -> ", error)
 
-    return tmp.cursor()
+    return tmp
 
 
 def create_table(cursor, table_name):
-    sql = "CREATE TABLE " + str(table_name) + \
-          "(date DATE, " \
+    sql = "CREATE TABLE " + table_name + \
+          " (date DATE, " \
           "platform VARCHAR(10), " \
           "user_ID VARCHAR(30), " \
           "item VARCHAR(30), " \
-          "num INTEGER, " \
+          "quantity INTEGER, " \
           "price INTEGER, " \
           "link VARCHAR(10))"
-
     cursor.execute(sql)
-    cursor.commit()
 
 
-def insert_mysql(cur, table_name, log_list):  # list type
+def insert_mysql(cursor, table_name, log_list):  # list type
     data = log_list.split()
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     platform = data[0]
@@ -37,27 +35,8 @@ def insert_mysql(cur, table_name, log_list):  # list type
     price = int(data[4])
     link = data[5]
 
-
-    # check this syntax
-    sql = "INSERT INTO" + str(table_name) + \
-          "(date, platform, user_id, item, num, price, link) " \
+    sql = "INSERT INTO " + str(table_name) + \
+          " (date, platform, user_id, item, quantity, price, link) " \
           "VALUES(%s, %s, %s, %s, %s, %s, %s)"
-
-
-# example code
-#   sql = """INSERT INTO
-#                    test(date, platform, user_id, item, num, price, link)
-#                    VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-
     val = (time, platform, user_id, item, quantity, price, link)
-    cur.execute(sql, val)
-
-
-
-
-"""
-# insert example
-
-cur = connect_mysql('localhost', 43306, 'jinung', 'Jinyes0410!', 'market')
-insert_mysql(cur, table_name, generator_log.make_log())
-"""
+    cursor.execute(sql, val)
