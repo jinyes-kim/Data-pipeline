@@ -9,14 +9,6 @@ def connect_influxdb(server_ip):
     return client
 
 
-def create_table(client, table_name):
-    client.create_database(table_name)
-
-
-def switch_table(client, table_name):
-    client.switch_database(table_name)
-
-
 def to_json(topic, data):
     data = data.split()
     platform = data[0]
@@ -47,3 +39,10 @@ def to_json(topic, data):
 def insert_influxdb(client_var, json_data):
     client_var.write_points(json_data)
 
+
+def create_table(client, table_name):
+    client.create_database(table_name)
+
+
+def switch_table(client, table_name):
+    client.switch_database(table_name)
