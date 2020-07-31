@@ -26,7 +26,7 @@ try:
 
         # choose table
         new_table_name = datetime.datetime.now().strftime("%Y%m%d")  # table_name
-        tables = mysql_client.execute("SHOW TABLES")
+        tables = mysql_client.execute("SHOW TABLES;")
         if new_table_name in tables:
             pass
         else:
