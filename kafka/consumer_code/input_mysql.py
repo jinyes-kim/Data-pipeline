@@ -26,7 +26,7 @@ def create_table(cursor, table_name):
 
 
 def insert_mysql(cursor, table_name, log_list):  # list type
-    data = log_list.split()
+    data = log_list
     time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     platform = data[0]
     user_id = data[1]
