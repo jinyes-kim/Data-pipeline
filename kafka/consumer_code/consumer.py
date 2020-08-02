@@ -36,7 +36,7 @@ try:
               % (msg.topic, msg.partition, msg.offset, msg.key, msg.value))
 
         # decode topic & log data
-        topic, new_log = dc.msg_decode(msg.topic), dc.msg_decode(msg.value)
+        topic, new_log = msg.topic, dc.msg_decode(msg.value)
 
         # choose table
         table_name = datetime.datetime.now().strftime("%Y%m%d")  # table_name
