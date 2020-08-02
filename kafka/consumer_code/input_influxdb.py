@@ -10,7 +10,6 @@ def connect_influxdb(server_ip):
 
 
 def to_json(topic, data):
-    data = data.split()
     platform = data[0]
     user_id = data[1]
     item = data[2]
