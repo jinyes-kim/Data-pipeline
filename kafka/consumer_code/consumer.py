@@ -68,3 +68,8 @@ try:
 
 except KeyboardInterrupt:
     sys.exit()
+
+    
+    
+##influx_client.close()
+#mysql_db.close()
