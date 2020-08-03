@@ -10,6 +10,7 @@ def connect_influxdb(server_ip):
 
 
 def to_json(topic, data):
+    data = data.split()
     platform = data[0]
     user_id = data[1]
     item = data[2]
@@ -24,14 +25,13 @@ def to_json(topic, data):
                 "platform": platform,
                 "link": link
             },
-            "time":  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "fields": {
                 "user_id": user_id,
                 "item": item,
                 "quantity": num,
                 "price": price,
             }
-
+            #"time":  datetime.datetime.now()
         }
     ]
     return json_body
