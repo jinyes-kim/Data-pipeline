@@ -6,17 +6,25 @@ import sys
 import datetime
 
 bootstrap_servers = ['localhost:9092']
-topicName = 'test'
+topicName = 'market'
 consumer = KafkaConsumer(topicName,
                          group_id='group_1',
                          bootstrap_servers=bootstrap_servers,
                          auto_offset_reset='earliest')
 
-influx_client = influx.connect_influxdb('influx_server_ip')
-influx_client.switch_database("test_market")
+try:
+    influx_client = influx.connect_influxdb('influx_server_ip')
+    influx_client.switch_database("market")
+    print("connect influx DB")
+except:
+    print("connect fail - inlfux DB")
 
-mysql_db = mysql.connect_mysql('mysql_server_ip', 43306, 'user_id', 'password', 'db_name')
-mysql_cursor = mysql_db.cursor()
+try:
+    mysql_db = mysql.connect_mysql('mysql_server_ip', 3306, 'root', 'password', 'market')
+    mysql_cursor = mysql_db.cursor()
+    print("connect MySQL")
+except:
+    print("connect fail - MySQL")
 
 
 # MySQL table check
@@ -36,11 +44,11 @@ try:
               % (msg.topic, msg.partition, msg.offset, msg.key, msg.value))
 
         # decode topic & log data
-        topic, new_log = msg.topic, dc.msg_decode(msg.value)
+        topic, new_log = dc.msg_decode(msg.topic), dc.msg_decode(msg.value)
 
         # choose table
         table_name = datetime.datetime.now().strftime("%Y%m%d")  # table_name
-        table_name = 'USER_' + table_name + "_TB"
+        table_name = table_name + "_TB"
 
         if table_name not in mysql_table_list:
             mysql.create_table(mysql_cursor, table_name)
@@ -60,4 +68,3 @@ try:
 
 except KeyboardInterrupt:
     sys.exit()
-
