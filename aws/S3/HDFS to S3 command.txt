@@ -1,0 +1,6 @@
+
+
+# HDFS to S3 command using hadoop distcp
+
+hadoop distcp -Dfs.s3a.access.key=myAccessKey -Dfs.s3a.secret.key=mySecretKey hdfs://user/hdfs/mydata s3a://myBucket/mydata_backup
+
