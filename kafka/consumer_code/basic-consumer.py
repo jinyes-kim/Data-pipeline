@@ -20,7 +20,7 @@ consumer = KafkaConsumer(topicName,
 try:
     for msg in consumer:
         print("%s:%d:%d: key=%s value=%s" % (
-            msg.topic, msg.partition, msg.offset, msg.key, msg.value))
+            msg.topic, msg.partition, msg.offset, msg.key, msg.value.decode('utf-8'))
 
 except KeyboardInterrupt:
     sys.exit()
